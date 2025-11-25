@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Happy+Monkey&display=swap" rel="stylesheet">
+  <title>Happy Birthday</title>
+  <style>
+    body {
+      font-family: 'Happy Monkey', system-ui;
+    }
+    #nyan {
+      position: absolute;
+      width: 70px;
+      transition: transform 0.1s; /* para que el volteo no sea brusco */
+    }
+  </style>
+</head>
+<body class="bg-[#FFE5FF]">
+  
+
+  <!-- Contenedor Nyan Cat -->
+  <div class="flex flex-col items-center pb-4 w-full relative overflow-hidden" id="container">
+    <img src="cake.gif" alt="" class="w-[50%] mt-3">
+    <img id="nyan" src="nyan-cat.gif" alt="Nyan Cat">
+    <div class="flex justify-center w-[50%] mx-auto h-[200px] bg-white rounded mb-2">
+      <img id="imagen" class="w-[80%]" src="gato2.png" alt="">
+    </div>
+    <p class="text-xl text-[#FF00FF]">Happy birthday!!</p>
+    <div class="p-8">
+      Feliz cumple, cabeza de pan 🎉🐱 <br>
+      Preparé una pequeña locura web para ti… solo porque los gatos son geniales y tú también 😏💛
+      Que hoy tengas un día tan divertido y raro como tú quieras.
+    </div>
+
+  </div>
+
+  <!-- Cambiador de gatos -->
+  
+
+  <script>
+    // --- Cambia imágenes de gatos ---
+    let index = 1;
+    function cambiarImagen() {
+      index++;
+      if (index > 4) index = 1;
+      document.getElementById("imagen").src = `gato${index}.png`;
+    }
+    setInterval(cambiarImagen, 2000);
+
+    // --- Movimiento Nyan Cat ---
+    const nyan = document.getElementById('nyan');
+    const container = document.getElementById('container');
+
+    let pos = { top: 0, left: 0 };
+    let speed = 2;
+    let direction = 'right';
+
+    function moverNyan() {
+      const maxLeft = container.clientWidth - nyan.clientWidth;
+      const maxTop = container.clientHeight - nyan.clientHeight;
+
+      if (direction === 'right') {
+          pos.left += speed;
+          nyan.style.transform = 'rotate(0deg) scaleX(1)';
+          if (pos.left >= maxLeft) direction = 'down';
+      } else if (direction === 'down') {
+          pos.top += speed;
+          nyan.style.transform = 'rotate(90deg) scaleX(1)'; // gira 90° para mirar hacia abajo
+          if (pos.top >= maxTop) direction = 'left';
+      } else if (direction === 'left') {
+          pos.left -= speed;
+          nyan.style.transform = 'rotate(0deg) scaleX(-1)'; // gira horizontalmente para mirar izquierda
+          if (pos.left <= 0) direction = 'up';
+      } else if (direction === 'up') {
+          pos.top -= speed;
+          nyan.style.transform = 'rotate(-90deg) scaleX(1)'; // gira -90° para mirar hacia arriba
+          if (pos.top <= 0) direction = 'right';
+      }
+
+
+      nyan.style.left = pos.left + 'px';
+      nyan.style.top = pos.top + 'px';
+      requestAnimationFrame(moverNyan);
+    }
+
+    moverNyan();
+  </script>
+
+</body>
+</html>
