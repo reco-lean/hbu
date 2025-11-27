@@ -8,14 +8,102 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Happy+Monkey&display=swap" rel="stylesheet">
   <title>Happy Birthday</title>
+  <style>
+    body {
+      font-family: 'Happy Monkey', system-ui;
+    }
+    #nyan {
+      position: absolute;
+      width: 70px;
+      transition: transform 0.1s; /* para que el volteo no sea brusco */
+    }
+  </style>
 </head>
 <body class="bg-[#FFE5FF]" style="font-family: Happy Monkey, system-ui;">
-  <div class="h-full h-screen flex justify-center items-center">
+  <div id="intro" class="h-full h-screen flex justify-center items-center">
     <div class="flex flex-col justify-center items-center gap-2 w-[200px] h-[150px] p-3 bg-[#ED9DED] text-white rounded">
       <p class="text-[#FFE5FF] text-xl font-bold">Aprieta aquí</p>
-      <a class="bg-[#D97ED9] text-center p-2 rounded" href="main.html">Entrar</a>
+      <button class="bg-[#D97ED9] text-center p-2 rounded" id="boton">Entrar</button>
+    </div>
+  </div>
+
+  <!-- Contenedor Nyan Cat -->
+  <div class="hidden flex flex-col items-center pb-4 w-full relative overflow-hidden" id="container">
+    <img src="cake.gif" alt="" class="w-[50%] mt-3">
+    <img id="nyan" src="nyan-cat.gif" alt="Nyan Cat">
+    <div class="flex justify-center w-[50%] mx-auto h-[200px] bg-white rounded mb-2">
+      <img id="imagen" class="w-[80%]" src="gato1.png" alt="">
+    </div>
+    <p class="text-xl text-[#FF00FF]">Happy birthday!!</p>
+    <div class="p-8">
+      Feliz cumple, cabeza de pan 🎉🐱 <br>
+      Preparé una pequeña locura web para ti… solo porque los gatos son geniales y tú también 💛
+      Que hoy tengas un día tan divertido y raro como tú quieras.
     </div>
 
   </div>
+  <audio id="audio" autoplay loop>
+    <source src="nyan-cat.ogg" type="audio/mpeg">
+  </audio>
+
+  <script>
+    const boton = document.getElementById("boton");
+    const intro = document.getElementById("intro");
+    const container = document.getElementById("container");
+    const nyan = document.getElementById('nyan');
+    const audio = document.getElementById("audio");
+
+    boton.addEventListener("click", () => {
+        intro.classList.add("hidden")
+        container.classList.remove("hidden");
+        audio.play();
+    })
+
+     // --- Cambia imágenes de gatos ---
+    let index = 1;
+    function cambiarImagen() {
+      index++;
+      if (index > 5) index = 1;
+      document.getElementById("imagen").src = `gato${index}.png`;
+    }
+    
+    setTimeout(() => setInterval(cambiarImagen, 2000), 2000);
+
+    // --- Movimiento Nyan Cat ---
+    let pos = { top: 0, left: 0 };
+    let speed = 2;
+    let direction = 'right';
+
+    function moverNyan() {
+      const maxLeft = container.clientWidth - nyan.clientWidth;
+      const maxTop = container.clientHeight - nyan.clientHeight;
+
+      if (direction === 'right') {
+          pos.left += speed;
+          nyan.style.transform = 'rotate(0deg) scaleX(1)';
+          if (pos.left >= maxLeft) direction = 'down';
+      } else if (direction === 'down') {
+          pos.top += speed;
+          nyan.style.transform = 'rotate(90deg) scaleX(1)'; // gira 90° para mirar hacia abajo
+          if (pos.top >= maxTop) direction = 'left';
+      } else if (direction === 'left') {
+          pos.left -= speed;
+          nyan.style.transform = 'rotate(0deg) scaleX(-1)'; // gira horizontalmente para mirar izquierda
+          if (pos.left <= 0) direction = 'up';
+      } else if (direction === 'up') {
+          pos.top -= speed;
+          nyan.style.transform = 'rotate(-90deg) scaleX(1)'; // gira -90° para mirar hacia arriba
+          if (pos.top <= 0) direction = 'right';
+      }
+
+
+      nyan.style.left = pos.left + 'px';
+      nyan.style.top = pos.top + 'px';
+      requestAnimationFrame(moverNyan);
+    }
+
+    moverNyan();
+
+  </script>
 </body>
 </html>
